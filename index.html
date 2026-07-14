@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>동남아 여름 가족여행 대시보드 · 아시아나 마일</title>
+<meta name="description" content="7-8월 우기를 피한 동남아 가족여행 추천 TOP7과 27개 도시 월별 기후 매트릭스, 아시아나 28만 마일 발권 플랜.">
+<style>
+  :root {
+    --ground: #FBFAF7; --surface: #FFFFFF; --surface-2: #F3F1EB;
+    --ink: #1B2523; --muted: #5E6B67; --hair: #E3DFD6;
+    --accent: #0E7C6B; --accent-soft: #E1F0EC;
+    /* 기후 히트맵 스케일: 건조(초록) → 중립(호박) → 습윤(파랑) */
+    --c-best: #0F9D6B;  --c-best-tx: #FFFFFF;
+    --c-dry:  #7FCB9B;  --c-dry-tx:  #0D3A26;
+    --c-ok:   #F2C14E;  --c-ok-tx:   #4A3606;
+    --c-wet:  #7FA8DE;  --c-wet-tx:  #10305A;
+    --c-heavy:#2F5FA0;  --c-heavy-tx:#FFFFFF;
+    --shadow: 0 1px 2px rgba(20,30,28,.06), 0 8px 24px rgba(20,30,28,.05);
+    --shadow-lg: 0 4px 12px rgba(20,30,28,.10), 0 20px 48px rgba(20,30,28,.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0F1513; --surface: #171F1C; --surface-2: #1E2926;
+      --ink: #ECF1EF; --muted: #93A29D; --hair: #2A3531;
+      --accent: #2DD4BF; --accent-soft: #123029;
+      --c-best: #17A874; --c-dry: #4E9E74; --c-dry-tx: #E6F5EC;
+      --c-wet: #5D86C4; --c-heavy: #2C4E86;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,.4), 0 24px 60px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0F1513; --surface: #171F1C; --surface-2: #1E2926;
+    --ink: #ECF1EF; --muted: #93A29D; --hair: #2A3531;
+    --accent: #2DD4BF; --accent-soft: #123029;
+    --c-best: #17A874; --c-dry: #4E9E74; --c-dry-tx: #E6F5EC;
+    --c-wet: #5D86C4; --c-heavy: #2C4E86;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.4), 0 24px 60px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"] {
+    --ground: #FBFAF7; --surface: #FFFFFF; --surface-2: #F3F1EB;
+    --ink: #1B2523; --muted: #5E6B67; --hair: #E3DFD6;
+    --accent: #0E7C6B; --accent-soft: #E1F0EC;
+    --c-best: #0F9D6B; --c-dry: #7FCB9B; --c-dry-tx: #0D3A26;
+    --c-wet: #7FA8DE; --c-heavy: #2F5FA0;
+    --shadow: 0 1px 2px rgba(20,30,28,.06), 0 8px 24px rgba(20,30,28,.05);
+    --shadow-lg: 0 4px 12px rgba(20,30,28,.10), 0 20px 48px rgba(20,30,28,.10);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', 'Malgun Gothic', sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; font-feature-settings: "tnum";
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 96px; }
+
+  /* ---- Sticky nav ---- */
+  .topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--ground) 88%, transparent); backdrop-filter: saturate(140%) blur(10px); border-bottom: 1px solid var(--hair); }
+  .topbar .inner { max-width: 1120px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 18px; }
+  .brand { font-weight: 800; font-size: 15px; letter-spacing: -.01em; white-space: nowrap; }
+  .brand .em { color: var(--accent); }
+  .nav { display: flex; gap: 4px; flex: 1; overflow-x: auto; }
+  .nav a { font-size: 13px; color: var(--muted); text-decoration: none; padding: 6px 11px; border-radius: 8px; white-space: nowrap; font-weight: 600; }
+  .nav a:hover { background: var(--surface-2); color: var(--ink); }
+  .toggle { border: 1px solid var(--hair); background: var(--surface); color: var(--ink); border-radius: 9px; padding: 7px 12px; font-size: 13px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .toggle:hover { border-color: var(--accent); }
+  .toggle:focus-visible, .nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- Header ---- */
+  header.hero { padding: 46px 0 30px; border-bottom: 1px solid var(--hair); }
+  .eyebrow { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 14px; }
+  h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.08; margin: 0 0 16px; font-weight: 800; letter-spacing: -.02em; text-wrap: balance; }
+  .lede { font-size: clamp(15px, 2vw, 18px); color: var(--muted); max-width: 62ch; margin: 0; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-top: 30px; }
+  .kpi { background: var(--surface); border: 1px solid var(--hair); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .kpi .lab { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .03em; margin: 0 0 8px; }
+  .kpi .val { font-size: clamp(22px, 3vw, 28px); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+  .kpi .val.accent { color: var(--accent); }
+  .kpi .foot { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+  .kpi .foot.pos { color: var(--accent); font-weight: 700; }
+
+  section { padding-top: 54px; scroll-margin-top: 64px; }
+  h2 { font-size: clamp(20px, 3vw, 26px); font-weight: 800; margin: 0 0 6px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 24px; font-size: 15px; max-width: 64ch; }
+
+  /* ---- Ranking TOP 7 ---- */
+  .rank-list { display: flex; flex-direction: column; gap: 12px; }
+  .rk {
+    display: grid; grid-template-columns: 64px 1fr auto; gap: 18px; align-items: center;
+    background: var(--surface); border: 1px solid var(--hair); border-radius: 16px;
+    padding: 18px 20px; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  }
+  .rk:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: color-mix(in srgb, var(--accent) 40%, var(--hair)); }
+  .rk .num {
+    font-size: 34px; font-weight: 800; line-height: 1; text-align: center;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .rk.top1 .num, .rk.top2 .num, .rk.top3 .num { color: #fff; }
+  .rk.top1 { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #0a5)); border-color: transparent; }
+  .rk.top1 .name, .rk.top1 .country, .rk.top1 .reason, .rk.top1 .meta span { color: #fff; }
+  .rk.top1 .name b { color:#fff; }
+  .rk.top1 .country { opacity: .9; }
+  .rk .medal { font-size: 15px; }
+  .rk .body { min-width: 0; }
+  .rk .country { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: .03em; }
+  .rk .name { margin: 2px 0 5px; font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+  .rk .name .flag { margin-right: 6px; }
+  .rk .reason { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+  .rk .top1 .reason { color: rgba(255,255,255,.92); }
+  .rk .meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; text-align: right; white-space: nowrap; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink); }
+  .rk.top1 .badge { background: rgba(255,255,255,.18); color:#fff; }
+  .badge .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .rk .miles { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .rk.top1 .miles { color: rgba(255,255,255,.85); }
+  @media (max-width: 560px) {
+    .rk { grid-template-columns: 44px 1fr; gap: 12px; }
+    .rk .meta { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: flex-start; text-align: left; flex-wrap: wrap; }
+    .rk .num { font-size: 26px; }
+  }
+
+  /* ---- Mileage plan ---- */
+  .callout { background: linear-gradient(135deg, var(--accent-soft), var(--surface)); border: 1px solid var(--hair); border-radius: 18px; padding: 26px; box-shadow: var(--shadow); margin-bottom: 22px; display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; }
+  .callout .big { text-align: center; padding-right: 26px; border-right: 1px solid var(--hair); }
+  .callout .big .num { font-size: clamp(34px, 6vw, 52px); font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -.02em; }
+  .callout .big .lab { font-size: 12.5px; color: var(--muted); font-weight: 700; margin-top: 6px; }
+  .callout .msg h3 { margin: 0 0 6px; font-size: clamp(17px,2.4vw,20px); font-weight: 800; }
+  .callout .msg p { margin: 0; font-size: 14px; color: var(--muted); }
+  .callout .msg b { color: var(--ink); }
+  @media (max-width: 620px) { .callout { grid-template-columns: 1fr; gap: 16px; } .callout .big { border-right: none; border-bottom: 1px solid var(--hair); padding: 0 0 16px; } }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+  @media (max-width: 620px) { .calc-grid { grid-template-columns: 1fr; } }
+  .calc { background: var(--surface); border: 1px solid var(--hair); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .calc.peak { border-color: var(--accent); }
+  .calc h4 { margin: 0 0 4px; font-size: 15px; font-weight: 800; display:flex; align-items:center; gap:8px; }
+  .calc .tag { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+  .tag-peak { background: var(--accent); color: #fff; }
+  .tag-off { background: var(--surface-2); color: var(--muted); }
+  .calc .cap { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+  .calc table { width: 100%; border-collapse: collapse; }
+  .calc td { padding: 7px 0; font-size: 13.5px; border-bottom: 1px solid var(--hair); }
+  .calc td small { color: var(--muted); }
+  .calc td.r { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .calc tr.sum td { border-bottom: none; border-top: 2px solid var(--hair); font-weight: 800; padding-top: 10px; font-size: 15px; }
+  .calc tr.sum td.r { color: var(--accent); }
+  .warn { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 14px; }
+  .warn .w { background: var(--surface); border: 1px solid var(--hair); border-left: 3px solid var(--accent); border-radius: 10px; padding: 14px 16px; }
+  .warn .w h5 { margin: 0 0 5px; font-size: 14px; font-weight: 800; }
+  .warn .w p { margin: 0; font-size: 13px; color: var(--muted); }
+  .warn .w b { color: var(--ink); }
+
+  /* ---- Legend + Matrix (heatmap) ---- */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 20px; margin: 0 0 18px; padding: 15px 18px; background: var(--surface); border:1px solid var(--hair); border-radius: 14px; }
+  .legend .item { display: flex; align-items: center; gap: 9px; font-size: 13.5px; }
+  .swatch { width: 26px; height: 22px; border-radius: 7px; display:inline-flex; align-items:center; justify-content:center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+  .s-best { background: var(--c-best); color: var(--c-best-tx); }
+  .s-dry  { background: var(--c-dry);  color: var(--c-dry-tx); }
+  .s-ok   { background: var(--c-ok);   color: var(--c-ok-tx); }
+  .s-wet  { background: var(--c-wet);  color: var(--c-wet-tx); }
+  .s-heavy{ background: var(--c-heavy);color: var(--c-heavy-tx); }
+
+  .scroller { overflow-x: auto; border: 1px solid var(--hair); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+  table.matrix { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 860px; }
+  table.matrix thead th { position: sticky; top: 0; background: var(--surface); z-index: 3; font-size: 12px; font-weight: 700; color: var(--muted); padding: 14px 0 12px; text-align: center; border-bottom: 1px solid var(--hair); }
+  table.matrix thead th.dest { text-align: left; padding-left: 18px; min-width: 176px; z-index: 4; }
+  table.matrix thead th.season { text-align: left; padding-left: 14px; min-width: 96px; }
+  table.matrix thead th.mon { width: 46px; }
+  table.matrix thead th.mon .mn { display:inline-flex; width: 26px; height: 26px; align-items:center; justify-content:center; border-radius: 8px; }
+  table.matrix thead th.mon.pk .mn { background: var(--accent); color: #fff; font-weight: 800; }
+  .country-row td { background: var(--surface-2); font-weight: 800; font-size: 12.5px; letter-spacing: .05em; padding: 8px 18px; color: var(--muted); text-transform: uppercase; position: sticky; left: 0; }
+  tbody td.dest { text-align: left; padding: 8px 10px 8px 18px; font-size: 13.5px; font-weight: 700; position: sticky; left: 0; background: var(--surface); min-width: 176px; box-shadow: 1px 0 0 var(--hair); z-index: 1; }
+  tbody td.dest small { display:block; color: var(--muted); font-weight: 500; font-size: 11px; margin-top: 1px; }
+  td.cell { text-align: center; padding: 3px; }
+  td.cell.pk { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .tile {
+    width: 100%; max-width: 40px; height: 30px; margin: 0 auto; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;
+    transition: transform .12s ease, box-shadow .12s ease; cursor: default; position: relative;
+  }
+  .tile:hover { transform: scale(1.18); box-shadow: var(--shadow-lg); z-index: 5; }
+  td.cell.pk .tile { box-shadow: 0 0 0 2px var(--accent); }
+  td.cell.pk .tile:hover { box-shadow: 0 0 0 2px var(--accent), var(--shadow-lg); }
+  .b-best  { background: var(--c-best);  color: var(--c-best-tx); }
+  .b-dry   { background: var(--c-dry);   color: var(--c-dry-tx); }
+  .b-ok    { background: var(--c-ok);    color: var(--c-ok-tx); }
+  .b-wet   { background: var(--c-wet);   color: var(--c-wet-tx); }
+  .b-heavy { background: var(--c-heavy); color: var(--c-heavy-tx); }
+  td.season { font-size: 12.5px; font-weight: 700; color: var(--ink); padding: 6px 10px 6px 14px; white-space: nowrap; }
+  td.season .pkgood { color: var(--accent); font-weight: 800; }
+  tbody tr:not(.country-row):hover td.dest { background: var(--surface-2); }
+  .matrix-note { font-size: 12.5px; color: var(--muted); margin: 12px 2px 0; }
+  .matrix-note b { color: var(--accent); }
+
+  /* ---- Tips ---- */
+  .tips { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 16px; }
+  .tip { background: var(--surface); border: 1px solid var(--hair); border-radius: 14px; padding: 18px 20px; }
+  .tip h4 { margin: 0 0 8px; font-size: 15px; font-weight: 800; }
+  .tip p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--hair); font-size: 12.5px; color: var(--muted); }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <span class="brand">🌴 여름 <span class="em">가족여행</span> 대시보드</span>
+      <nav class="nav">
+        <a href="#ranking">추천 TOP7</a>
+        <a href="#miles">마일 플랜</a>
+        <a href="#matrix">기후 매트릭스</a>
+        <a href="#why">알아둘 점</a>
+      </nav>
+      <button class="toggle" id="themeBtn" type="button">🌗 테마</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">동남아 · 7-8월 · 아시아나 마일</p>
+      <h1>비 안 오는 동남아 + 마일로 저비용, 한 화면에</h1>
+      <p class="lede">4인 가족(성인 2 · 초등 2)이 한국 혹서기를 피해 7-8월 5일을 다녀오는 계획. 보유 아시아나 마일 28만으로 어디까지 가능한지, 그 시기에 날씨가 좋은 곳은 어디인지 정리했습니다.</p>
+      <div class="kpis">
+        <div class="kpi"><p class="lab">보유 마일</p><div class="val">280,000</div><p class="foot">아시아나</p></div>
+        <div class="kpi"><p class="lab">7-8월 4인 왕복 (성수기)</p><div class="val accent">210,000</div><p class="foot">이코노미 · 동남아</p></div>
+        <div class="kpi"><p class="lab">잔여 마일</p><div class="val">≈ 70,000</div><p class="foot pos">발권 가능 ✓</p></div>
+        <div class="kpi"><p class="lab">종합 1순위</p><div class="val" style="font-size:22px">나트랑</div><p class="foot">건기·직항·저비용</p></div>
+        <div class="kpi"><p class="lab">날씨 최상</p><div class="val" style="font-size:22px">발리</div><p class="foot">7-8월 건기 절정</p></div>
+      </div>
+    </header>
+
+    <!-- ============ RANKING TOP 7 ============ -->
+    <section id="ranking">
+      <h2>7-8월 추천 여행지 TOP 7</h2>
+      <p class="sub">7-8월 우기 회피(날씨) · 아시아나 직항 · 4인 마일 발권 가능성 · 가족 친화 · 총비용을 종합한 순위입니다. 모두 동남아 동일 공제 존이라 <b>4인 왕복 성수기 21만 마일</b>로 갈 수 있습니다.</p>
+      <div class="rank-list" id="rankList"></div>
+    </section>
+
+    <!-- ============ MILES ============ -->
+    <section id="miles">
+      <h2>아시아나 마일리지 발권 플랜</h2>
+      <p class="sub">동남아는 목적지가 달라도 <b>공제 마일이 동일</b>(동일 존)합니다. 같은 마일이면 날씨 좋고 먼 곳이 이득. 단 7-8월은 성수기라 공제가 1.5배입니다.</p>
+      <div class="callout">
+        <div class="big"><div class="num">210,000</div><div class="lab">7-8월(성수기) 4인 왕복 필요 마일</div></div>
+        <div class="msg">
+          <h3>28만 마일이면 성수기에도 4인 전원 이코노미 발권 가능 👍</h3>
+          <p>7-8월은 <b>성수기(공제 1.5배)</b>라 4인 왕복에 <b>21만 마일</b>이 필요하지만, 보유 28만으로 충분하고 <b>약 7만 마일</b>이 남습니다. 단, 마일 외 <b>유류할증료·제세공과금은 현금 별도</b>이며, 성수기 보너스 좌석은 극히 빨리 마감됩니다.</p>
+        </div>
+      </div>
+      <div class="calc-grid">
+        <div class="calc peak">
+          <h4>7-8월 실제 적용 <span class="tag tag-peak">성수기 ×1.5</span></h4>
+          <p class="cap">동남아 왕복 이코노미 · 여름 방학은 성수기</p>
+          <table>
+            <tr><td>성인 (60,000 × 2)</td><td class="r">120,000</td></tr>
+            <tr><td>소아 45,000 × 2 <small>(성인의 75%)</small></td><td class="r">90,000</td></tr>
+            <tr class="sum"><td>합계 (4인)</td><td class="r">210,000</td></tr>
+            <tr><td>보유 마일</td><td class="r">280,000</td></tr>
+            <tr class="sum"><td>잔여</td><td class="r">≈ 70,000</td></tr>
+          </table>
+        </div>
+        <div class="calc">
+          <h4>참고 · 평수기라면 <span class="tag tag-off">비수기 기준</span></h4>
+          <p class="cap">방학을 피해 갈 수 있다면 마일이 크게 절약</p>
+          <table>
+            <tr><td>성인 (40,000 × 2)</td><td class="r">80,000</td></tr>
+            <tr><td>소아 30,000 × 2 <small>(성인의 75%)</small></td><td class="r">60,000</td></tr>
+            <tr class="sum"><td>합계 (4인)</td><td class="r">140,000</td></tr>
+            <tr><td>보유 마일</td><td class="r">280,000</td></tr>
+            <tr class="sum"><td>잔여</td><td class="r">≈ 140,000</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="warn">
+        <div class="w"><h5>① 성수기 좌석은 오픈 즉시</h5><p>보너스 좌석은 출발 355일 전 오픈. 7-8월분은 경쟁이 극심하니 오픈일 새벽에 4석을 한 번에 확보하세요.</p></div>
+        <div class="w"><h5>② 현금 별도 비용</h5><p>유류할증료 + 제세공과금은 마일과 별개로 현금 결제. 동남아 왕복 대략 1인 10~20만원(노선·시기별 변동).</p></div>
+        <div class="w"><h5>③ 같은 마일이면 먼 곳이 이득</h5><p>다낭·나트랑·발리·코타키나발루가 모두 동일 공제(성수기 60,000). 마일 가성비만 보면 최장거리·최고날씨인 <b>발리</b>가 유리.</p></div>
+        <div class="w"><h5>④ 총비용 최저 = 베트남</h5><p>다낭·나트랑은 유류할증료가 낮고 현지 물가도 저렴. "저비용" 관점 종합 1위.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ MATRIX ============ -->
+    <section id="matrix">
+      <h2>월별 기후 매트릭스 · 전 지역</h2>
+      <p class="sub">국가별·도시별 1~12월 날씨 히트맵. <b>7·8월 열은 강조 표시</b>했고, 맨 오른쪽에 도시별 <b>최적 시기</b>를 요약했습니다. 타일에 마우스를 올리면 설명이 뜹니다.</p>
+      <div class="legend">
+        <div class="item"><span class="swatch s-best">◎</span> 최적 관광시기 (건기·쾌적)</div>
+        <div class="item"><span class="swatch s-dry">○</span> 건기 (비 적음·더움)</div>
+        <div class="item"><span class="swatch s-ok">△</span> 무난 / 어깨철 (소나기·혹서)</div>
+        <div class="item"><span class="swatch s-wet">▽</span> 우기 (비 잦음)</div>
+        <div class="item"><span class="swatch s-heavy">✕</span> 우기 절정 / 태풍·홍수</div>
+      </div>
+      <div class="scroller">
+        <table class="matrix">
+          <thead><tr id="matHead"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="matrix-note"><b>7-8월 요약</b> — 우기 회피 최적: 발리·길리·롬복·족자카르타·코모도(인니), 나트랑·다낭·호이안(베트남 중·남중부), 코사무이(태국), 퍼헨티안·레당·티오만(말레이 동해안), 코타키나발루. &nbsp;|&nbsp; 피해야 할 곳: 방콕·치앙마이·푸껫·끄라비(태국), 시엠립(캄보디아), 하노이·호치민·푸꾸옥(베트남 북·남부), 보라카이·팔라완·마닐라(필리핀 서부).</p>
+    </section>
+
+    <!-- ============ WHY ============ -->
+    <section id="why">
+      <h2>왜 이렇게 갈리나 · 알아둘 점</h2>
+      <div class="tips">
+        <div class="tip"><h4>남서 몬순의 계절</h4><p>6~10월 남서 몬순이 태국·캄보디아·베트남 남부·필리핀 서부에 비를 뿌립니다. 그래서 방콕·시엠립·호치민·보라카이는 7-8월이 우기.</p></div>
+        <div class="tip"><h4>인도네시아는 정반대</h4><p>발리·자바·롬복은 건기가 4~10월. 7-8월이 1년 중 가장 맑아 여름 동남아의 예외적 명당입니다.</p></div>
+        <div class="tip"><h4>베트남은 지역마다 다름</h4><p>같은 나라도 북부(하노이)·남부(호치민)는 여름 우기, 중·남중부(다낭·나트랑)는 건기. 목적지 선택이 곧 날씨 선택.</p></div>
+        <div class="tip"><h4>말레이는 동·서 해안 반대</h4><p>서해안(랑카위)은 여름 살짝 습, 동해안 섬(퍼헨티안·레당·티오만)은 3~10월 성수기라 7-8월 최상. 대신 11~2월 몬순엔 휴장.</p></div>
+        <div class="tip"><h4>'건기 = 시원'이 아니다</h4><p>다낭·나트랑·시엠립은 여름 건기라도 낮 35℃ 안팎. 아이 동반이면 한낮 실내·수영, 야외는 아침·저녁으로 배치하세요.</p></div>
+        <div class="tip"><h4>7-8월은 성수기 프리미엄</h4><p>인기지는 항공·숙소 요금이 오르고 붐빕니다. 마일 좌석도 성수기엔 극히 빨리 마감되니 오픈일에 잡으세요.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      기후 구분은 평년 강수 패턴에 근거한 일반적 경향이며 해마다 달라질 수 있습니다. 마일 수치는 아시아나 동남아 왕복 이코노미 성인 40,000M(성수기 60,000M)·소아(만2~11세) 75%·유아(만2세 미만) 10% 공제 기준입니다. 대한항공과 마일리지 통합이 진행 중이라 규정이 바뀔 수 있으니 발권 전 아시아나에서 최종 확인하세요. · 비행시간·요금은 인천 출발 근사치.
+    </footer>
+  </div>
+
+<script>
+  // ---------- TOP 7 ----------
+  const ranks = [
+    { n:1, flag:'🇻🇳', country:'베트남 · 남중부', name:'나트랑', grade:['dry','건기·더움'],
+      reason:'7-8월이 건기라 강수가 적고 바다가 잔잔합니다. 아시아나 직항(약 5시간)에 유류할증료가 낮고 현지 물가도 저렴해 마일+현금 총비용이 가장 적습니다. 빈원더스(대형 테마파크)·머드스파·해변으로 초등 아이 물놀이 일정에 최적.' },
+    { n:2, flag:'🇻🇳', country:'베트남 · 중부', name:'다낭 / 호이안', grade:['dry','건기·매우 더움'],
+      reason:'2~8월 건기로 비는 적습니다. 인천 직항이 가장 많고 저렴(약 4.5시간). 바나힐·미케비치·호이안 야경이 압축돼 이동이 짧아 아이 동반이 수월. 단 한낮 35℃+ 무더위는 실내·수영으로 대비.' },
+    { n:3, flag:'🇮🇩', country:'인도네시아', name:'발리', grade:['best','날씨 최상'],
+      reason:'7-8월이 건기 절정이라 습도가 낮고 저녁이 선선해 동남아 최고의 여름 날씨. 동일 공제 존이라 같은 마일로 최장거리를 가는 셈이라 마일 가치가 가장 높습니다. 성수기 붐빔·요금 상승은 감안.' },
+    { n:4, flag:'🇲🇾', country:'말레이시아 · 보르네오', name:'코타키나발루', grade:['dry','건기·무난'],
+      reason:'상대 건기(3~9월)로 대체로 맑고, 아일랜드 호핑·리조트 풀·석양 명소로 여유로운 휴양형. 아시아나 직항(약 5.5시간). 오후 스콜은 오전 액티비티 배치로 피하면 됩니다.' },
+    { n:5, flag:'🇹🇭', country:'태국 · 걸프만', name:'코사무이', grade:['dry','여름이 건조기'],
+      reason:'태국 대부분이 우기인 7-8월에 걸프만 사무이는 오히려 건조기인 예외 지역. 잔잔한 해변과 앙통 해상공원이 매력. 다만 직항이 드물어 방콕 경유가 일반적이라 이동 편의는 중위.' },
+    { n:6, flag:'🇸🇬', country:'싱가포르', name:'싱가포르', grade:['ok','무난·실내 강함'],
+      reason:'뚜렷한 우기가 없고 유니버설·아쿠아리움·가든스바이더베이 등 실내 볼거리가 많아 스콜에 강합니다. 아시아나 직항, 가족 인프라 최상. 다만 물가가 높아 "저비용" 관점에선 아래.' },
+    { n:7, flag:'🇵🇭', country:'필리핀 · 중부 비사야', name:'세부 / 보홀', grade:['ok','무난'],
+      reason:'중부 비사야는 서부(보라카이·팔라완)와 달리 habagat 영향이 약해 7-8월도 무난한 편. 아일랜드 호핑·안전한 리조트 해변으로 가족 물놀이에 적합하고 가성비가 좋습니다.' },
+  ];
+  const GBG = { best:'var(--c-best)', dry:'var(--c-dry)', ok:'var(--c-ok)', wet:'var(--c-wet)', heavy:'var(--c-heavy)' };
+  const MEDAL = { 1:'🥇', 2:'🥈', 3:'🥉' };
+  document.getElementById('rankList').innerHTML = ranks.map(r => `
+    <div class="rk ${r.n<=1?'top1':''}">
+      <div class="num">${r.n}${MEDAL[r.n]?`<span class="medal">${MEDAL[r.n]}</span>`:''}</div>
+      <div class="body">
+        <div class="country">${r.country}</div>
+        <div class="name"><span class="flag">${r.flag}</span>${r.name}</div>
+        <p class="reason">${r.reason}</p>
+      </div>
+      <div class="meta">
+        <span class="badge"><i class="dot" style="background:${GBG[r.grade[0]]}"></i>${r.grade[1]}</span>
+        <span class="miles">4인 왕복 210,000M</span>
+      </div>
+    </div>`).join('');
+
+  // ---------- MATRIX ----------
+  const SYM = { best:'◎', dry:'○', ok:'△', wet:'▽', heavy:'✕' };
+  const LABEL = { best:'최적 관광시기 (건기·쾌적)', dry:'건기 (비 적음·더움)', ok:'무난/어깨철 (소나기·혹서)', wet:'우기 (비 잦음)', heavy:'우기 절정 (태풍·홍수 위험)' };
+  const data = [
+    { group: '태국' , rows: [
+      { name:'방콕', note:'중부', m:['best','best','ok','ok','wet','wet','wet','wet','heavy','wet','best','best'] },
+      { name:'치앙마이', note:'북부 · 2~4월 미세먼지', m:['best','ok','ok','ok','wet','wet','wet','wet','heavy','wet','best','best'] },
+      { name:'푸껫 / 끄라비', note:'안다만 서해안', m:['best','best','best','ok','wet','wet','wet','wet','heavy','heavy','ok','best'] },
+      { name:'코사무이', note:'걸프만 동해안', m:['dry','best','best','best','ok','dry','dry','dry','ok','wet','heavy','heavy'] },
+    ]},
+    { group: '베트남' , rows: [
+      { name:'하노이', note:'북부', m:['best','ok','ok','ok','wet','wet','wet','wet','wet','best','best','best'] },
+      { name:'하롱베이', note:'북부', m:['dry','ok','best','best','ok','wet','wet','heavy','wet','best','best','best'] },
+      { name:'다낭 / 호이안', note:'중부', m:['ok','dry','best','best','best','dry','dry','dry','wet','heavy','heavy','wet'] },
+      { name:'나트랑', note:'남중부', m:['best','best','best','best','best','dry','dry','dry','wet','heavy','heavy','wet'] },
+      { name:'호치민 / 메콩', note:'남부', m:['best','best','ok','ok','wet','wet','wet','wet','wet','wet','wet','best'] },
+      { name:'푸꾸옥', note:'남부 섬', m:['best','best','best','ok','wet','wet','wet','wet','heavy','wet','best','best'] },
+    ]},
+    { group: '인도네시아' , rows: [
+      { name:'발리', note:'', m:['wet','wet','wet','dry','best','best','best','best','best','dry','wet','wet'] },
+      { name:'길리 / 롬복', note:'', m:['wet','wet','wet','dry','best','best','best','best','best','dry','wet','wet'] },
+      { name:'족자카르타', note:'자바 · 보로부두르', m:['wet','wet','wet','dry','best','best','best','best','best','dry','wet','wet'] },
+      { name:'코모도 / 라부안바조', note:'', m:['wet','wet','wet','dry','best','best','best','best','best','best','dry','wet'] },
+      { name:'자카르타', note:'자바', m:['heavy','heavy','wet','ok','ok','dry','dry','dry','dry','ok','wet','heavy'] },
+    ]},
+    { group: '말레이시아' , rows: [
+      { name:'쿠알라룸푸르', note:'', m:['ok','dry','wet','wet','ok','dry','dry','ok','ok','wet','heavy','wet'] },
+      { name:'랑카위 / 페낭', note:'서해안', m:['best','best','best','ok','ok','dry','ok','ok','wet','heavy','wet','best'] },
+      { name:'퍼헨티안 / 레당 / 티오만', note:'동해안 · 11~2월 휴장', m:['heavy','heavy','ok','best','best','best','best','best','best','ok','heavy','heavy'] },
+      { name:'코타키나발루', note:'보르네오', m:['wet','dry','best','best','best','dry','dry','dry','ok','wet','wet','wet'] },
+    ]},
+    { group: '싱가포르' , rows: [
+      { name:'싱가포르', note:'연중 강수·뚜렷한 우기 없음', m:['wet','dry','ok','ok','ok','ok','ok','ok','ok','ok','wet','heavy'] },
+    ]},
+    { group: '필리핀' , rows: [
+      { name:'마닐라', note:'서부', m:['best','best','best','ok','ok','wet','heavy','heavy','wet','wet','ok','best'] },
+      { name:'보라카이', note:'서부', m:['best','best','best','best','ok','wet','wet','wet','wet','wet','best','best'] },
+      { name:'팔라완 (엘니도/코론)', note:'서부', m:['best','best','best','best','ok','wet','wet','heavy','wet','wet','ok','best'] },
+      { name:'세부 / 보홀', note:'중부 비사야', m:['dry','best','best','best','best','ok','ok','ok','ok','wet','wet','dry'] },
+      { name:'시아르가오', note:'동부 · 서핑', m:['wet','ok','dry','dry','dry','ok','ok','ok','wet','wet','heavy','heavy'] },
+    ]},
+    { group: '캄보디아 · 라오스 · 미얀마' , rows: [
+      { name:'시엠립 (앙코르)', note:'캄보디아', m:['best','best','ok','ok','wet','wet','wet','wet','heavy','heavy','best','best'] },
+      { name:'프놈펜', note:'캄보디아', m:['best','best','ok','ok','wet','wet','wet','wet','heavy','wet','best','best'] },
+      { name:'루앙프라방', note:'라오스', m:['best','best','ok','ok','wet','wet','wet','wet','wet','wet','best','best'] },
+      { name:'양곤 / 바간', note:'미얀마', m:['best','best','ok','ok','wet','wet','heavy','heavy','wet','wet','best','best'] },
+    ]},
+  ];
+
+  // 헤더 (도시 / 1~12 / 최적시기)
+  let head = '<th class="dest">도시 (지역)</th>';
+  for (let i=1;i<=12;i++){ const pk=(i===7||i===8)?' pk':''; head += `<th class="mon${pk}"><span class="mn">${i}</span></th>`; }
+  head += '<th class="season">최적 시기 ◎</th>';
+  document.getElementById('matHead').innerHTML = head;
+
+  // 연속 구간을 "5~9월" 형태로
+  function fmtSeason(months){
+    if(!months.length) return '—';
+    const parts=[]; let s=months[0], p=months[0];
+    for(let k=1;k<months.length;k++){ if(months[k]===p+1){p=months[k];} else {parts.push([s,p]); s=months[k]; p=months[k];} }
+    parts.push([s,p]);
+    return parts.map(([a,b])=> a===b ? `${a}` : `${a}~${b}`).join(', ') + '월';
+  }
+
+  const tb = document.getElementById('tbody');
+  data.forEach(g => {
+    const cr = document.createElement('tr');
+    cr.className = 'country-row';
+    cr.innerHTML = `<td colspan="14">${g.group}</td>`;
+    tb.appendChild(cr);
+    g.rows.forEach(r => {
+      const tr = document.createElement('tr');
+      let cells = `<td class="dest">${r.name}${r.note ? `<small>${r.note}</small>` : ''}</td>`;
+      const bestMonths=[];
+      r.m.forEach((lv, i) => {
+        if(lv==='best') bestMonths.push(i+1);
+        const pk = (i===6||i===7) ? ' pk' : '';
+        cells += `<td class="cell${pk}"><span class="tile b-${lv}" title="${(i+1)}월 · ${LABEL[lv]}">${SYM[lv]}</span></td>`;
+      });
+      let seasonArr = bestMonths;
+      if(!seasonArr.length){ r.m.forEach((lv,i)=>{ if(lv==='dry') seasonArr.push(i+1); }); }
+      const julAugGood = r.m[6]==='best'||r.m[7]==='best'||r.m[6]==='dry'||r.m[7]==='dry';
+      cells += `<td class="season"><span class="${julAugGood?'pkgood':''}">${fmtSeason(seasonArr)}</span></td>`;
+      tr.innerHTML = cells;
+      tb.appendChild(tr);
+    });
+  });
+
+  // ---------- Theme toggle ----------
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const root = document.documentElement;
+    const cur = root.getAttribute('data-theme');
+    const isDark = cur ? cur === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>
