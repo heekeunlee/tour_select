@@ -116,6 +116,9 @@
   .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink); }
   .rk.top1 .badge { background: rgba(255,255,255,.18); color:#fff; }
   .badge .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .badge.direct { background: var(--accent-soft); color: var(--accent); }
+  .badge.connect { background: var(--surface-2); color: var(--muted); }
+  .rk.top1 .badge.direct, .rk.top1 .badge.connect { background: rgba(255,255,255,.18); color:#fff; }
   .rk .miles { font-size: 12px; color: var(--muted); font-weight: 600; }
   .rk.top1 .miles { color: rgba(255,255,255,.85); }
   @media (max-width: 560px) {
@@ -229,7 +232,7 @@
         <div class="kpi"><p class="lab">보유 마일</p><div class="val">280,000</div><p class="foot">아시아나</p></div>
         <div class="kpi"><p class="lab">7-8월 4인 왕복 (성수기)</p><div class="val accent">210,000</div><p class="foot">이코노미 · 동남아</p></div>
         <div class="kpi"><p class="lab">잔여 마일</p><div class="val">≈ 70,000</div><p class="foot pos">발권 가능 ✓</p></div>
-        <div class="kpi"><p class="lab">종합 1순위</p><div class="val" style="font-size:22px">나트랑</div><p class="foot">건기·직항·저비용</p></div>
+        <div class="kpi"><p class="lab">아시아나 직항 · 여름 최적</p><div class="val" style="font-size:22px">다낭 · 싱가포르</div><p class="foot">직항 SEA 중 날씨 무난</p></div>
         <div class="kpi"><p class="lab">날씨 최상</p><div class="val" style="font-size:22px">발리</div><p class="foot">7-8월 건기 절정</p></div>
       </div>
     </header>
@@ -237,7 +240,7 @@
     <!-- ============ RANKING TOP 7 ============ -->
     <section id="ranking">
       <h2>7-8월 추천 여행지 TOP 7</h2>
-      <p class="sub">7-8월 우기 회피(날씨) · 아시아나 직항 · 4인 마일 발권 가능성 · 가족 친화 · 총비용을 종합한 순위입니다. 모두 동남아 동일 공제 존이라 <b>4인 왕복 성수기 21만 마일</b>로 갈 수 있습니다.</p>
+      <p class="sub">7-8월 우기 회피(날씨) · 가족 친화 · 총비용을 종합한 순위입니다. 각 항목의 <b>아시아나 직항 여부</b>를 배지로 표기했으니 참고하세요 — 현재 아시아나 직항이 있는 곳은 <b>다낭·싱가포르뿐</b>이고, 나머지는 경유편 또는 타 항공사 직항이 필요합니다.</p>
       <div class="rank-list" id="rankList"></div>
     </section>
 
@@ -325,20 +328,20 @@
 <script>
   // ---------- TOP 7 ----------
   const ranks = [
-    { n:1, flag:'🇻🇳', country:'베트남 · 남중부', name:'나트랑', grade:['dry','건기·더움'],
-      reason:'7-8월이 건기라 강수가 적고 바다가 잔잔합니다. 아시아나 직항(약 5시간)에 유류할증료가 낮고 현지 물가도 저렴해 마일+현금 총비용이 가장 적습니다. 빈원더스(대형 테마파크)·머드스파·해변으로 초등 아이 물놀이 일정에 최적.' },
-    { n:2, flag:'🇻🇳', country:'베트남 · 중부', name:'다낭 / 호이안', grade:['dry','건기·매우 더움'],
-      reason:'2~8월 건기로 비는 적습니다. 인천 직항이 가장 많고 저렴(약 4.5시간). 바나힐·미케비치·호이안 야경이 압축돼 이동이 짧아 아이 동반이 수월. 단 한낮 35℃+ 무더위는 실내·수영으로 대비.' },
-    { n:3, flag:'🇮🇩', country:'인도네시아', name:'발리', grade:['best','날씨 최상'],
-      reason:'7-8월이 건기 절정이라 습도가 낮고 저녁이 선선해 동남아 최고의 여름 날씨. 동일 공제 존이라 같은 마일로 최장거리를 가는 셈이라 마일 가치가 가장 높습니다. 성수기 붐빔·요금 상승은 감안.' },
-    { n:4, flag:'🇲🇾', country:'말레이시아 · 보르네오', name:'코타키나발루', grade:['dry','건기·무난'],
-      reason:'상대 건기(3~9월)로 대체로 맑고, 아일랜드 호핑·리조트 풀·석양 명소로 여유로운 휴양형. 아시아나 직항(약 5.5시간). 오후 스콜은 오전 액티비티 배치로 피하면 됩니다.' },
-    { n:5, flag:'🇹🇭', country:'태국 · 걸프만', name:'코사무이', grade:['dry','여름이 건조기'],
-      reason:'태국 대부분이 우기인 7-8월에 걸프만 사무이는 오히려 건조기인 예외 지역. 잔잔한 해변과 앙통 해상공원이 매력. 다만 직항이 드물어 방콕 경유가 일반적이라 이동 편의는 중위.' },
-    { n:6, flag:'🇸🇬', country:'싱가포르', name:'싱가포르', grade:['ok','무난·실내 강함'],
+    { n:1, flag:'🇻🇳', country:'베트남 · 남중부', name:'나트랑', grade:['dry','건기·더움'], direct:false,
+      reason:'7-8월이 건기라 강수가 적고 바다가 잔잔합니다. 유류할증료가 낮고 현지 물가도 저렴해 총비용이 가장 적습니다. 빈원더스(대형 테마파크)·머드스파·해변으로 초등 아이 물놀이 일정에 최적. 단 아시아나 직항은 없어 경유편(또는 대한항공·베트남항공·진에어 등 타사 직항)이 필요합니다.' },
+    { n:2, flag:'🇻🇳', country:'베트남 · 중부', name:'다낭 / 호이안', grade:['dry','건기·매우 더움'], direct:true,
+      reason:'2~8월 건기로 비는 적습니다. 아시아나 직항이 있는 데다 인천 직항이 가장 많고 저렴(약 4.5시간). 바나힐·미케비치·호이안 야경이 압축돼 이동이 짧아 아이 동반이 수월. 단 한낮 35℃+ 무더위는 실내·수영으로 대비.' },
+    { n:3, flag:'🇮🇩', country:'인도네시아', name:'발리', grade:['best','날씨 최상'], direct:false,
+      reason:'7-8월이 건기 절정이라 습도가 낮고 저녁이 선선해 동남아 최고의 여름 날씨. 다만 아시아나는 발리(덴파사르) 직항이 없어(자카르타만 직항) 경유편 또는 타사 직항이 필요합니다. 성수기 붐빔·요금 상승도 감안.' },
+    { n:4, flag:'🇲🇾', country:'말레이시아 · 보르네오', name:'코타키나발루', grade:['dry','건기·무난'], direct:false,
+      reason:'상대 건기(3~9월)로 대체로 맑고, 아일랜드 호핑·리조트 풀·석양 명소로 여유로운 휴양형. 아시아나 직항은 없고 에어아시아·진에어 등 타사 직항 또는 경유를 이용합니다. 오후 스콜은 오전 액티비티 배치로 회피.' },
+    { n:5, flag:'🇹🇭', country:'태국 · 걸프만', name:'코사무이', grade:['dry','여름이 건조기'], direct:false,
+      reason:'태국 대부분이 우기인 7-8월에 걸프만 사무이는 오히려 건조기인 예외 지역. 잔잔한 해변과 앙통 해상공원이 매력. 아시아나 직항이 없고 방콕 경유가 일반적이라 이동 편의는 중위.' },
+    { n:6, flag:'🇸🇬', country:'싱가포르', name:'싱가포르', grade:['ok','무난·실내 강함'], direct:true,
       reason:'뚜렷한 우기가 없고 유니버설·아쿠아리움·가든스바이더베이 등 실내 볼거리가 많아 스콜에 강합니다. 아시아나 직항, 가족 인프라 최상. 다만 물가가 높아 "저비용" 관점에선 아래.' },
-    { n:7, flag:'🇵🇭', country:'필리핀 · 중부 비사야', name:'세부 / 보홀', grade:['ok','무난'],
-      reason:'중부 비사야는 서부(보라카이·팔라완)와 달리 habagat 영향이 약해 7-8월도 무난한 편. 아일랜드 호핑·안전한 리조트 해변으로 가족 물놀이에 적합하고 가성비가 좋습니다.' },
+    { n:7, flag:'🇵🇭', country:'필리핀 · 중부 비사야', name:'세부 / 보홀', grade:['ok','무난'], direct:false,
+      reason:'중부 비사야는 서부(보라카이·팔라완)와 달리 habagat 영향이 약해 7-8월도 무난한 편. 아일랜드 호핑·안전한 리조트 해변으로 가족 물놀이에 적합하고 가성비가 좋습니다. 아시아나 직항은 없어 타사 직항 또는 경유가 필요합니다.' },
   ];
   const GBG = { best:'var(--c-best)', dry:'var(--c-dry)', ok:'var(--c-ok)', wet:'var(--c-wet)', heavy:'var(--c-heavy)' };
   const MEDAL = { 1:'🥇', 2:'🥈', 3:'🥉' };
@@ -351,8 +354,9 @@
         <p class="reason">${r.reason}</p>
       </div>
       <div class="meta">
+        <span class="badge ${r.direct?'direct':'connect'}">${r.direct?'✈️ 아시아나 직항':'↔ 경유·타사 직항'}</span>
         <span class="badge"><i class="dot" style="background:${GBG[r.grade[0]]}"></i>${r.grade[1]}</span>
-        <span class="miles">4인 왕복 210,000M</span>
+        <span class="miles">${r.direct?'아시아나 왕복 4인 210,000M':'경유/스타얼라이언스 발권'}</span>
       </div>
     </div>`).join('');
 
